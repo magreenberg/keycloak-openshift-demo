@@ -1,8 +1,8 @@
 #!/bin/bash -e
 source bin/env.sh
 
-KEYCLOAK_POD=`oc get pod --no-headers=true -l app=keycloak -o name | sed 's/pods\///'`
-KCADMIN="oc rsh $KEYCLOAK_POD ./keycloak/bin/kcadm.sh"
+KEYCLOAK_POD=`oc get pod --no-headers=true -l application=keycloak -o name | sed 's/pod\///'`
+KCADMIN="oc rsh $KEYCLOAK_POD /opt/jboss/keycloak/bin/kcadm.sh"
 
 $KCADMIN config credentials --config /tmp/.kcadmin.config --server http://localhost:8080/auth --realm master --user admin --password admin
 

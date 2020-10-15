@@ -25,6 +25,10 @@
             {
                 "name": "admin",
                 "description": "Administrator privileges"
+            },
+            {
+                "name": "superadmin",
+                "description": "Super Administrator privileges"
             }
         ]
     },

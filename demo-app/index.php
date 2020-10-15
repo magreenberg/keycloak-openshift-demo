@@ -37,6 +37,7 @@
         <div id="authenticated" class="menu">
             <button name="logoutBtn" onclick="keycloak.logout()">Logout</button>
             <button name="accountBtn" onclick="keycloak.accountManagement()">Account</button>
+
         </div>
 
         <div class="content">
@@ -51,6 +52,7 @@
     <div class="service">
         <div>Keycloak: <?= $_ENV["KEYCLOAK_URL"] ?></div>
         <div>Service: <?= $_ENV["SERVICE_URL"] ?></div>
+        <div>Additional Service: <?= $_ENV["ADDITIONAL_SERVICE_URL"] ?></div>
     </div>
 </body>
 

@@ -2,12 +2,12 @@
     "kind": "Template",
     "apiVersion": "v1",
     "metadata": {
-        "name": "demo-app",
+        "name": "additional-service",
         "annotations": {
-            "tags": "demo-app",
+            "tags": "additional-service",
             "version": "1.0",
-            "openshift.io/display-name": "Demo App",
-            "description": "An example HTML5 app"
+            "openshift.io/display-name": "Additional Service",
+            "description": "Another example of a Node.js service"
         }
     },
     "parameters": [
@@ -15,29 +15,13 @@
             "displayName": "Application Name",
             "description": "The name for the application.",
             "name": "APPLICATION_NAME",
-            "value": "demo-app",
+            "value": "additional-service",
             "required": true
         },
         {
             "displayName": "Keycloak URL",
             "description": "Keycloak URL",
             "name": "KEYCLOAK_URL",
-            "from": "[a-zA-Z0-9]{8}",
-            "generate": "expression",
-            "required": true
-        },
-        {
-            "displayName": "Service URL",
-            "description": "Service URL",
-            "name": "SERVICE_URL",
-            "from": "[a-zA-Z0-9]{8}",
-            "generate": "expression",
-            "required": true
-        },
-        {
-            "displayName": "Additional Service URL",
-            "description": "Additional Service URL",
-            "name": "ADDITIONAL_SERVICE_URL",
             "from": "[a-zA-Z0-9]{8}",
             "generate": "expression",
             "required": true
@@ -57,8 +41,8 @@
             "spec": {
                 "ports": [
                     {
-                        "port": 8080,
-                        "targetPort": 8080
+                        "port": 8081,
+                        "targetPort": 8081
                     }
                 ],
                 "selector": {
@@ -117,12 +101,12 @@
                         "imageChangeParams": {
                             "automatic": true,
                             "containerNames": [
-                                "demo-app"
+                                "additional-service"
                             ],
                             "from": {
                                 "kind": "ImageStreamTag",
                                 "namespace": "keycloak",
-                                "name": "demo-app:latest"
+                                "name": "additional-service:latest"
                             }
                         }
                     },
@@ -146,10 +130,10 @@
                         "containers": [
                             {
                                 "name": "${APPLICATION_NAME}",
-                                "image": "demo-app",
+                                "image": "additional-service",
                                 "ports": [
                                     {
-                                        "containerPort": 8080,
+                                        "containerPort": 8081,
                                         "protocol": "TCP"
                                     }
                                 ],
@@ -157,14 +141,6 @@
                                     {
                                         "name": "KEYCLOAK_URL",
                                         "value": "${KEYCLOAK_URL}"
-                                    },
-                                    {
-                                        "name": "SERVICE_URL",
-                                        "value": "${SERVICE_URL}"
-                                    },
-                                    {
-                                        "name": "ADDITIONAL_SERVICE_URL",
-                                        "value": "${ADDITIONAL_SERVICE_URL}"
                                     }
                                 ],
                                 "securityContext": {

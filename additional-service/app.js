@@ -21,7 +21,6 @@ var bodyParser = require('body-parser');
 var Keycloak = require('keycloak-connect');
 var cors = require('cors');
 var jwt = require('jsonwebtoken')
-const request = require("request");
 
 var app = express();
 app.use(bodyParser.json());
@@ -83,73 +82,35 @@ app.use(keycloak.middleware({
 }));
 
 app.get('/public', function (req, res) {
-  res.json({message: 'public'});
+  res.json({message: 'additional-public'});
 });
 
 app.get('/secured', keycloak.protect('realm:user'), function (req, res) {
-  console.log('demo-service-secured-1')
+  console.log('MIKE-secured-additional-1')
   if (req.headers.authorization) {
     console.log(req.headers.authorization)
-    console.log('demo-service-secured-1.a')
+    console.log('MIKE-secured-additional-1.a')
     jwtToken = jwt.decode(req.headers.authorization.substring(7))
-    console.log('demo-service-secured-1.b')
+    console.log('MIKE-secured-additional-1.b')
     console.log(jwtToken)
   }
-  res.json({message: 'secured'});
+  res.json({message: 'additional-secured'});
 });
 
-app.get('/admin', keycloak.protect('realm:admin'), function (req, res) {
-  console.log('demo-service-jump-1')
+app.get('/admin', keycloak.protect('realm:superadmin'), function (req, res) {
+  console.log('MIKE-additional-admin-1')
   //console.log(res)
   if (req.headers.authorization) {
     console.log(req.headers.authorization)
-    console.log('demo-service-jump-1.a')
+    console.log('MIKE-additional-admin-1.a')
     jwtToken = jwt.decode(req.headers.authorization.substring(7))
-    console.log('demo-service-hump-1.b')
+    console.log('MIKE-additional-admin-1.b')
     printJWT(jwtToken)
-    //console.log(jwtToken)
+    console.log(jwtToken)
   }
-  // configure the request to your keycloak server
-  const remoteURL = `https://additional-service-keycloak.apps-crc.testing/admin`
-  const options = {
-    method: 'GET',
-    url: remoteURL,
-    headers: {
-      // add the token received to the userinfo request
-      Authorization: req.headers.authorization,
-    },
-  };
-  request(options, (error, response, body) => {
-    if (error) throw new Error(error);
-
-    // if the request status isn't "OK", the token is invalid
-    if (response.statusCode !== 200) {
-      console.log(response)
-      res.status(401).json({
-        error: remoteURL + ` unauthorized`,
-      });
-    }
-    else {
-      res.json({ message: `jump via ${response.body.message} succeeded!` });
-      console.log(response);
-    }
-  });
+  res.json({message: 'additional-admin'});
 });
 
-app.get('/originaladmin', keycloak.protect('realm:admin'), function (req, res) {
-  console.log('demo-service-admin-1')
-  //console.log(res)
-  if (req.headers.authorization) {
-    console.log(req.headers.authorization)
-    console.log('demo-service-admin-1.a')
-    jwtToken = jwt.decode(req.headers.authorization.substring(7))
-    console.log('demo-service-admin-1.b')
-    printJWT(jwtToken)
-    //console.log(jwtToken)
-  }
-  res.json({message: 'admin'});
-});
-
-app.listen(8080, function () {
-  console.log('Started at port 8080');
+app.listen(8081, function () {
+  console.log('Started at port 8081');
 });

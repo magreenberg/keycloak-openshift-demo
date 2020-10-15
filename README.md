@@ -43,7 +43,9 @@ or run `bin/configure-keycloak.sh`.
 
 The Node.js service is a very simple API that is secured with the Keycloak Node.js adapter. 
 
-Simply run `bin/start-service.sh` and the service will be deployed to OpenShift. 
+First start the additonal service by running `bin/start-additional-service.sh`.
+
+Once it is up and running start the service by running `bin/start-service.sh`.
 
 To find the hostname of the service run `oc get routes demo-service`. Then open `https://<hostname>/public` 
 in your favorite browser. You can also try `https://<hostname>/secured`, but this will return a 401 as you

@@ -22,6 +22,7 @@ var Keycloak = require('keycloak-connect');
 var cors = require('cors');
 var jwt = require('jsonwebtoken')
 const request = require("request");
+const additionalServiceUrl = process.env.ADDITIONAL_SERVICE_URL
 
 var app = express();
 app.use(bodyParser.json());
@@ -49,6 +50,9 @@ function isEmpty(val){
 
 function printJWT(jwtToken) {
   if (!isEmpty(jwtToken)) {
+    console.log("exp: " + new Date(jwtToken.exp * 1000))
+    console.log("iat: " + new Date(jwtToken.iat * 1000))
+    console.log("auth_time: " + new Date(jwtToken.auth_time * 1000))
     if (!isEmpty(jwtToken.preferred_username)) {
       console.log('preferred_username=' + jwtToken.preferred_username)
     }
@@ -65,6 +69,16 @@ function printJWT(jwtToken) {
       console.log('family_name=' + jwtToken.family_name)
     }
   }
+}
+
+function sleep(milliseconds) {
+  console.log("BEFORE: " + Date.now());
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+  console.log("AFTER: " + Date.now());
 }
 
 // Provide the session store to the Keycloak so that sessions
@@ -99,6 +113,21 @@ app.get('/secured', keycloak.protect('realm:user'), function (req, res) {
 });
 
 app.get('/admin', keycloak.protect('realm:admin'), function (req, res) {
+  console.log('demo-service-admin-1')
+  //console.log(res)
+  if (req.headers.authorization) {
+    console.log(req.headers.authorization)
+    console.log('demo-service-admin-1.a')
+    jwtToken = jwt.decode(req.headers.authorization.substring(7))
+    console.log('demo-service-admin-1.b')
+    printJWT(jwtToken)
+    //console.log(jwtToken)
+  }
+  res.json({message: 'admin'});
+});
+
+
+app.get('/admin-superadmin', keycloak.protect('realm:admin'), function (req, res) {
   console.log('demo-service-jump-1')
   //console.log(res)
   if (req.headers.authorization) {
@@ -109,11 +138,14 @@ app.get('/admin', keycloak.protect('realm:admin'), function (req, res) {
     printJWT(jwtToken)
     //console.log(jwtToken)
   }
+  // wait for 90 seconds before invoking the next service (to test token expiry)
+  //sleep(90 * 1000)
+
   // configure the request to your keycloak server
-  const remoteURL = `https://additional-service-keycloak.apps-crc.testing/admin`
+  console.log("additionalServiceUrl=" + additionalServiceUrl)
   const options = {
     method: 'GET',
-    url: remoteURL,
+    url: additionalServiceUrl,
     headers: {
       // add the token received to the userinfo request
       Authorization: req.headers.authorization,
@@ -126,28 +158,14 @@ app.get('/admin', keycloak.protect('realm:admin'), function (req, res) {
     if (response.statusCode !== 200) {
       console.log(response)
       res.status(401).json({
-        error: remoteURL + ` unauthorized`,
+        error: additionalServiceUrl + ` unauthorized`,
       });
     }
     else {
-      res.json({ message: `jump via ${response.body.message} succeeded!` });
+      res.json({ message: `jump via ${response.body} succeeded!` });
       console.log(response);
     }
   });
-});
-
-app.get('/originaladmin', keycloak.protect('realm:admin'), function (req, res) {
-  console.log('demo-service-admin-1')
-  //console.log(res)
-  if (req.headers.authorization) {
-    console.log(req.headers.authorization)
-    console.log('demo-service-admin-1.a')
-    jwtToken = jwt.decode(req.headers.authorization.substring(7))
-    console.log('demo-service-admin-1.b')
-    printJWT(jwtToken)
-    //console.log(jwtToken)
-  }
-  res.json({message: 'admin'});
 });
 
 app.listen(8080, function () {

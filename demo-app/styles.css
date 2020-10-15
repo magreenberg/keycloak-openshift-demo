@@ -17,7 +17,7 @@
 body {
     background-color: #333;
     font-family: sans-serif;
-    font-size: 30px;
+    font-size: 20px;
 }
 
 button {
@@ -73,7 +73,7 @@ hr {
     margin-top: 10px;
     background-color: #fff;
     border: 1px solid #ccc;
-    font-size: 40px;
+    font-size: 30px;
     font-weight: bold;
 }
 
@@ -93,7 +93,7 @@ hr {
 .service {
     background-color: #555;
     color: #ccc;
-    font-size: 20px;
+    font-size: 14px;
     position: fixed;
     bottom: 0px;
     left: 0px;

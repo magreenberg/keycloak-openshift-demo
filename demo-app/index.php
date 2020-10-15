@@ -44,6 +44,7 @@
             <button name="publicBtn" onclick="request('public')">Invoke Public</button>
             <button name="securedBtn" onclick="request('secured')">Invoke Secured</button>
             <button name="adminBtn" onclick="request('admin')">Invoke Admin</button>
+            <button name="superadminBtn" onclick="request('admin-superadmin')">Invoke Admin-Superadmin</button>
 
             <div class="message" id="message"></div>
         </div>

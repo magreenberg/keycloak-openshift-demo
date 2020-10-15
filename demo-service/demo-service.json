@@ -27,6 +27,14 @@
             "required": true
         },
         {
+            "displayName": "Additional Service URL",
+            "description": "Additional Service URL",
+            "name": "ADDITIONAL_SERVICE_URL",
+            "from": "[a-zA-Z0-9]{8}",
+            "generate": "expression",
+            "required": true
+        },
+        {
             "displayName": "Custom https Route Hostname",
             "description": "Custom hostname for https service route. Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix>",
             "name": "HOSTNAME_HTTPS",
@@ -141,6 +149,10 @@
                                     {
                                         "name": "KEYCLOAK_URL",
                                         "value": "${KEYCLOAK_URL}"
+                                    },
+                                    {
+                                        "name": "ADDITIONAL_SERVICE_URL",
+                                        "value": "${ADDITIONAL_SERVICE_URL}"
                                     }
                                 ],
                                 "securityContext": {

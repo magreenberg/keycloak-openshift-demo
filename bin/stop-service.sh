@@ -1,4 +1,4 @@
 #!/bin/bash -e
 source bin/env.sh
 
-oc delete all -l app=demo-service
+oc delete all -l application=demo-service
